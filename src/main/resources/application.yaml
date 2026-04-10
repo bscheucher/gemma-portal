@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: gemma-portal
+  docker:
+    compose:
+      enabled: false
+
+server:
+  port: 8080
+
+ollama:
+  base-url: http://localhost:11434
+  model: gemma4
+
+logging:
+  level:
+    com.gemmaportal: INFO
