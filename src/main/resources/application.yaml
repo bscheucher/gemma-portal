@@ -1,12 +1,17 @@
 spring:
   application:
     name: gemma-portal
+  main:
+    web-application-type: servlet
   docker:
     compose:
       enabled: false
 
 server:
   port: 8080
+
+cors:
+  allowed-origins: http://localhost:3000
 
 ollama:
   base-url: http://localhost:11434
