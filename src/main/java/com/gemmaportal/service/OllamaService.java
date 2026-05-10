@@ -109,8 +109,9 @@ public class OllamaService {
                     OllamaChatResponse chunk = MAPPER.readValue(line, OllamaChatResponse.class);
 
                     if (!metaSent) {
+                        String model = chunk.getModel() != null ? chunk.getModel() : ollamaProperties.getModel();
                         emitter.send(MAPPER.writeValueAsString(
-                                java.util.Map.of("model", chunk.getModel())));
+                                java.util.Map.of("model", model)));
                         metaSent = true;
                     }
 
