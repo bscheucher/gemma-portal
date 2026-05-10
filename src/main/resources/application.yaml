@@ -5,7 +5,17 @@ spring:
     web-application-type: servlet
   docker:
     compose:
-      enabled: false
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gemma_portal
+    username: gemma
+    password: gemma
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
 
 server:
   port: 8080

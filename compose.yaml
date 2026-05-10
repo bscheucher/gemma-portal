@@ -1,1 +1,9 @@
-services: { }
+services:
+  postgres:
+    image: 'postgres:17-alpine'
+    environment:
+      POSTGRES_DB: gemma_portal
+      POSTGRES_USER: gemma
+      POSTGRES_PASSWORD: gemma
+    ports:
+      - '5432:5432'

@@ -36,7 +36,7 @@ public class ChatController {
         }
 
         try {
-            ChatResponse response = ollamaService.chat(request.getMessage(), session);
+            ChatResponse response = ollamaService.chat(request.getMessage(), session.getId());
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Chat error: {}", e.getMessage());
@@ -54,14 +54,11 @@ public class ChatController {
             return err;
         }
 
-        // Fetch history on the request thread while session context is guaranteed
-        List<ChatMessage> history = ollamaService.getHistory(session);
-
+        String sessionId = session.getId();
         SseEmitter emitter = new SseEmitter(120_000L);
 
-        // Virtual thread: blocks on Ollama I/O without tying up a platform thread
         Thread.ofVirtual().start(() ->
-                ollamaService.streamChat(request.getMessage(), history, emitter)
+                ollamaService.streamChat(request.getMessage(), sessionId, emitter)
         );
 
         return emitter;
@@ -69,12 +66,12 @@ public class ChatController {
 
     @GetMapping("/history")
     public ResponseEntity<List<ChatMessage>> getHistory(HttpSession session) {
-        return ResponseEntity.ok(ollamaService.getConversationHistory(session));
+        return ResponseEntity.ok(ollamaService.getConversationHistory(session.getId()));
     }
 
     @DeleteMapping("/history")
     public ResponseEntity<Void> clearHistory(HttpSession session) {
-        ollamaService.clearHistory(session);
+        ollamaService.clearHistory(session.getId());
         return ResponseEntity.ok().build();
     }
 
