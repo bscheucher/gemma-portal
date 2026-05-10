@@ -14,6 +14,8 @@ public class OllamaChatResponse {
 
     private boolean done;
 
+    private String error;
+
     @JsonProperty("total_duration")
     private Long totalDuration;
 

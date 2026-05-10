@@ -108,6 +108,11 @@ public class OllamaService {
                     if (line.isBlank()) continue;
                     OllamaChatResponse chunk = MAPPER.readValue(line, OllamaChatResponse.class);
 
+                    if (chunk.getError() != null) {
+                        log.error("Ollama error: {}", chunk.getError());
+                        throw new RuntimeException(chunk.getError());
+                    }
+
                     if (!metaSent) {
                         String model = chunk.getModel() != null ? chunk.getModel() : ollamaProperties.getModel();
                         emitter.send(MAPPER.writeValueAsString(
