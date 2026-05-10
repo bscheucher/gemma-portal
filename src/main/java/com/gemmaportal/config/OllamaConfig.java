@@ -11,7 +11,7 @@ import java.time.Duration;
 
 @Configuration
 @EnableConfigurationProperties(OllamaProperties.class)
-public class OllamaConfig {
+public class    OllamaConfig {
 
     @Bean
     public RestClient ollamaRestClient(OllamaProperties props) {
