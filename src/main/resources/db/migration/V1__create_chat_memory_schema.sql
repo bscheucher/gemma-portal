@@ -15,7 +15,7 @@ CREATE TABLE messages (
     sequence_number  INTEGER                     NOT NULL,
     created_at       TIMESTAMP WITH TIME ZONE    NOT NULL DEFAULT now(),
 
-    CONSTRAINT messages_role_check CHECK (role IN ('user', 'assistant', 'system')),
+    CONSTRAINT messages_role_check CHECK (role IN ('USER', 'ASSISTANT', 'SYSTEM')),
     CONSTRAINT messages_sequence_non_negative CHECK (sequence_number >= 0),
     UNIQUE (conversation_id, sequence_number)
 );
