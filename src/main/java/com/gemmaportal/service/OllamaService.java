@@ -56,7 +56,11 @@ public class OllamaService {
             executeStream(conversation, emitter);
         } catch (Exception e) {
             log.error("Ollama streaming error: {}", e.getMessage(), e);
-            try { emitter.completeWithError(e); } catch (Exception ignored) {}
+            try {
+                emitter.completeWithError(e);
+            } catch (Exception completeEx) {
+                log.warn("Failed to complete SSE emitter with error", completeEx);
+            }
         }
     }
 
