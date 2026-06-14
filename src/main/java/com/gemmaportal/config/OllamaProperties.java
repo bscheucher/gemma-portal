@@ -12,5 +12,6 @@ public class OllamaProperties {
     private String baseUrl = "http://localhost:11434";
     private String model = "gemma3";
     private Duration streamTimeout = Duration.ofSeconds(120);
+    private Double temperature = 0.1;
 
 }

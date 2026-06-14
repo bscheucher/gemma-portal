@@ -87,6 +87,7 @@ public class OllamaService {
                 .model(ollamaProperties.getModel())
                 .messages(new ArrayList<>(history))
                 .stream(stream)
+                .options(new OllamaOptions(ollamaProperties.getTemperature()))
                 .build();
     }
 

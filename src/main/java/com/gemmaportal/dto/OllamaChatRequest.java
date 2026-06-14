@@ -15,4 +15,5 @@ public class OllamaChatRequest {
     private String model;
     private List<ChatMessage> messages;
     private boolean stream;
+    private OllamaOptions options;
 }
