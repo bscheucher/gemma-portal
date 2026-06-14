@@ -7,9 +7,9 @@ spring:
     compose:
       enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/gemma_portal
-    username: gemma
-    password: gemma
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/gemma_portal}
+    username: ${DB_USERNAME:gemma}
+    password: ${DB_PASSWORD:gemma}
   jpa:
     hibernate:
       ddl-auto: validate
