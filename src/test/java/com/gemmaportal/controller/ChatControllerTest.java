@@ -1,5 +1,6 @@
 package com.gemmaportal.controller;
 
+import com.gemmaportal.config.OllamaProperties;
 import com.gemmaportal.dto.ChatMessage;
 import com.gemmaportal.dto.ChatResponse;
 import com.gemmaportal.service.OllamaService;
@@ -27,6 +28,9 @@ class ChatControllerTest {
 
     @MockitoBean
     OllamaService ollamaService;
+
+    @MockitoBean
+    OllamaProperties ollamaProperties;
 
     @Test
     void healthReturnsOk() throws Exception {

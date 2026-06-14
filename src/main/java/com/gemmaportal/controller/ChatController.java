@@ -1,5 +1,6 @@
 package com.gemmaportal.controller;
 
+import com.gemmaportal.config.OllamaProperties;
 import com.gemmaportal.dto.ChatMessage;
 import com.gemmaportal.dto.ChatRequest;
 import com.gemmaportal.dto.ChatResponse;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ChatController {
 
     private final OllamaService ollamaService;
+    private final OllamaProperties ollamaProperties;
 
     @PostMapping
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request, HttpSession session) {
@@ -55,7 +57,7 @@ public class ChatController {
         }
 
         String sessionId = session.getId();
-        SseEmitter emitter = new SseEmitter(120_000L);
+        SseEmitter emitter = new SseEmitter(ollamaProperties.getStreamTimeout().toMillis());
 
         Thread.ofVirtual().start(() ->
                 ollamaService.streamChat(request.getMessage(), sessionId, emitter)
