@@ -21,7 +21,7 @@ server:
   port: 8080
 
 cors:
-  allowed-origins: http://localhost:3000
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
 ollama:
   base-url: http://localhost:11434
