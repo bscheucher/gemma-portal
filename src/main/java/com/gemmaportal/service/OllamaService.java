@@ -146,14 +146,24 @@ public class OllamaService {
                         emitToken(emitter, token);
                     }
                 }
-                if (chunk.isDone()) {
-                    finishStream(emitter, conversation, fullContent.toString());
-                    return;
-                }
+                if (chunk.isDone()) break;
             }
+        } catch (IOException | RuntimeException e) {
+            persistPartial(conversation, fullContent);
+            throw e;
         }
 
         finishStream(emitter, conversation, fullContent.toString());
+    }
+
+    private void persistPartial(Conversation conversation, StringBuilder content) {
+        if (content.isEmpty()) return;
+        try {
+            saveAssistantMessage(conversation, content.toString());
+            log.warn("Persisted partial assistant response ({} chars) after stream error", content.length());
+        } catch (Exception saveEx) {
+            log.error("Failed to persist partial assistant response", saveEx);
+        }
     }
 
     private void emitMetaEvent(SseEmitter emitter, String model) throws IOException {
