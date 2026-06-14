@@ -2,7 +2,6 @@ plugins {
     java
     id("org.springframework.boot") version "4.0.5"
     id("io.spring.dependency-management") version "1.1.7"
-    id("com.netflix.dgs.codegen") version "8.3.0"
     id("org.graalvm.buildtools.native") version "0.11.5"
 }
 
@@ -54,12 +53,6 @@ dependencyManagement {
         mavenBom("org.springframework.modulith:spring-modulith-bom:${property("springModulithVersion")}")
         mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
     }
-}
-
-tasks.generateJava {
-    schemaPaths.add("${projectDir}/src/main/resources/graphql-client")
-    packageName = "com.gemmaportal.codegen"
-    generateClient = true
 }
 
 tasks.withType<Test> {
