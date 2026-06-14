@@ -22,20 +22,17 @@ public class ChatMemoryService {
     }
 
     public Message appendMessage(UUID conversationId, Role role, String content) {
-        long nextSeq = messageRepository.countByConversationId(conversationId);
+        int nextSeq = conversationRepository.reserveNextSequence(conversationId);
         Conversation ref = conversationRepository.getReferenceById(conversationId);
-        return messageRepository.save(Message.create(ref, role, content, (int) nextSeq));
+        return messageRepository.save(Message.create(ref, role, content, nextSeq));
     }
 
     @Transactional(readOnly = true)
     public List<ChatMessage> getHistory(String sessionId) {
         return conversationRepository.findBySessionId(sessionId)
-                .map(conv -> messageRepository
-                        .findByConversationIdOrderBySequenceNumber(conv.getId())
-                        .stream()
-                        .map(m -> new ChatMessage(roleToString(m.getRole()), m.getContent()))
-                        .toList())
-                .orElse(List.of());
+                .map(this::loadMessages)
+                .orElse(
+                        List.of());
     }
 
     public void clearHistory(String sessionId) {
@@ -45,5 +42,13 @@ public class ChatMemoryService {
 
     public String roleToString(Role role) {
         return role.name().toLowerCase();
+    }
+
+    private List<ChatMessage> loadMessages(Conversation conversation) {
+        return messageRepository
+                .findByConversationIdOrderBySequenceNumber(conversation.getId())
+                .stream()
+                .map(m -> new ChatMessage(roleToString(m.getRole()), m.getContent()))
+                .toList();
     }
 }

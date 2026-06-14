@@ -154,7 +154,7 @@ class ConversationRepositorySpec {
             List<Message> messages = messageRepository.findByConversationIdOrderBySequenceNumber(conv1.getId());
 
             assertThat(messages).hasSize(1);
-            assertThat(messages.get(0).getContent()).isEqualTo("conv1 message");
+            assertThat(messages.getFirst().getContent()).isEqualTo("conv1 message");
         }
 
         @Test
@@ -165,6 +165,36 @@ class ConversationRepositorySpec {
             List<Message> messages = messageRepository.findByConversationIdOrderBySequenceNumber(conversation.getId());
 
             assertThat(messages).isEmpty();
+        }
+    }
+
+    @Nested
+    class WhenReservingSequenceNumbers {
+
+        @Test
+        void returnsConsecutiveIntegersStartingFromZero() {
+            Conversation conversation = conversationRepository.save(
+                    Conversation.create("session-seq", "gemma4"));
+
+            int first = conversationRepository.reserveNextSequence(conversation.getId());
+            int second = conversationRepository.reserveNextSequence(conversation.getId());
+            int third = conversationRepository.reserveNextSequence(conversation.getId());
+
+            assertThat(first).isZero();
+            assertThat(second).isEqualTo(1);
+            assertThat(third).isEqualTo(2);
+        }
+
+        @Test
+        void reservationsForDifferentConversationsAreIndependent() {
+            Conversation a = conversationRepository.save(Conversation.create("s-a", "gemma4"));
+            Conversation b = conversationRepository.save(Conversation.create("s-b", "gemma4"));
+
+            conversationRepository.reserveNextSequence(a.getId());
+            conversationRepository.reserveNextSequence(a.getId());
+            int bFirst = conversationRepository.reserveNextSequence(b.getId());
+
+            assertThat(bFirst).isZero();
         }
     }
 

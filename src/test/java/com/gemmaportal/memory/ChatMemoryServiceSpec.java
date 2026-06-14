@@ -81,7 +81,7 @@ class ChatMemoryServiceSpec {
 
         @Test
         void persistsMessageWithCorrectRole() {
-            when(messageRepository.countByConversationId(conversationId)).thenReturn(0L);
+            when(conversationRepository.reserveNextSequence(conversationId)).thenReturn(0);
             when(messageRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
             Message result = service.appendMessage(conversationId, Role.USER, "hello");
@@ -91,8 +91,8 @@ class ChatMemoryServiceSpec {
         }
 
         @Test
-        void sequenceNumberIsNextAfterExistingMessages() {
-            when(messageRepository.countByConversationId(conversationId)).thenReturn(3L);
+        void usesSequenceNumberReservedByRepository() {
+            when(conversationRepository.reserveNextSequence(conversationId)).thenReturn(3);
             when(messageRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
             service.appendMessage(conversationId, Role.USER, "new message");
@@ -102,7 +102,7 @@ class ChatMemoryServiceSpec {
 
         @Test
         void sequenceNumberStartsAtZeroForFirstMessage() {
-            when(messageRepository.countByConversationId(conversationId)).thenReturn(0L);
+            when(conversationRepository.reserveNextSequence(conversationId)).thenReturn(0);
             when(messageRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
             service.appendMessage(conversationId, Role.USER, "first");
