@@ -125,7 +125,7 @@ public class OllamaService {
                 .build();
     }
 
-    private void processStreamChunks(InputStream body, Conversation conversation, SseEmitter emitter) throws IOException {
+    void processStreamChunks(InputStream body, Conversation conversation, SseEmitter emitter) throws IOException {
         StringBuilder fullContent = new StringBuilder();
         boolean metaSent = false;
 
